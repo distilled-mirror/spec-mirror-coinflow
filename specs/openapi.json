@@ -12485,8 +12485,8 @@
           "transaction",
           "type"
         ],
-        "description": "(EVM only) If your contract returns the NFT ID, then utilize this object.\n\nThe contract mints the NFT to msg.sender (which is the Coinflow contract), the Coinflow contract picks up the returned NFT ID, and fwd's the NFT to the end user's wallet.",
-        "title": "ReturnedTokenIdRedeem"
+        "title": "ReturnedTokenIdRedeem",
+        "deprecated": true
       },
       "KnownTokenIdRedeemTransaction": {
         "type": "object",
@@ -14697,6 +14697,11 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "consumedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Set when a `one_time_purchase` checkout claims this authorization, before\nthe debit is sent. Cleared only if the processor definitively declines."
           },
           "revokedAt": {
             "type": "string",
@@ -19582,6 +19587,7 @@
         "enum": [
           "admin",
           "editor",
+          "payouts",
           "chargeback",
           "chargeback_analyst",
           "chargeback_analyst_read",
