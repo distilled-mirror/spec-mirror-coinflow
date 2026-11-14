@@ -20235,6 +20235,10 @@
           "mastercardCardAcceptorId": {
             "type": "string"
           },
+          "amexEnabled": {
+            "type": "boolean",
+            "description": "Only set once this MID has Amex acceptance live at Highnote; without it\nAmex skips Highnote, since auths on an MID without Amex set up decline."
+          },
           "applicationSubmittedAt": {
             "type": "string",
             "format": "date-time",
@@ -20246,7 +20250,7 @@
         ],
         "title": "HighnoteMerchantSettings"
       },
-      "Pick_HighnoteMerchantSettings.merchantAcceptorId-or-visaCardAcceptorId-or-mastercardCardAcceptorId_": {
+      "Pick_HighnoteMerchantSettings.merchantAcceptorId-or-visaCardAcceptorId-or-mastercardCardAcceptorId-or-amexEnabled_": {
         "type": "object",
         "properties": {
           "merchantAcceptorId": {
@@ -20258,10 +20262,14 @@
           },
           "mastercardCardAcceptorId": {
             "type": "string"
+          },
+          "amexEnabled": {
+            "type": "boolean",
+            "description": "Only set once this MID has Amex acceptance live at Highnote; without it\nAmex skips Highnote, since auths on an MID without Amex set up decline."
           }
         },
         "description": "From T, pick a set of properties whose keys are in the union K",
-        "title": "Pick_HighnoteMerchantSettings.merchantAcceptorId-or-visaCardAcceptorId-or-mastercardCardAcceptorId_"
+        "title": "Pick_HighnoteMerchantSettings.merchantAcceptorId-or-visaCardAcceptorId-or-mastercardCardAcceptorId-or-amexEnabled_"
       },
       "PayarcMerchantArgs": {
         "type": "object",
@@ -20988,7 +20996,7 @@
             "$ref": "#/components/schemas/HighnoteMerchantSettings"
           },
           "highnote2MerchantArgs": {
-            "$ref": "#/components/schemas/Pick_HighnoteMerchantSettings.merchantAcceptorId-or-visaCardAcceptorId-or-mastercardCardAcceptorId_"
+            "$ref": "#/components/schemas/Pick_HighnoteMerchantSettings.merchantAcceptorId-or-visaCardAcceptorId-or-mastercardCardAcceptorId-or-amexEnabled_"
           },
           "payarcMerchantArgs": {
             "$ref": "#/components/schemas/PayarcMerchantArgs"
@@ -22430,6 +22438,17 @@
           }
         },
         "title": "IMerchantStringWithdrawFeePayment"
+      },
+      "CardNameMatchResult": {
+        "type": "string",
+        "enum": [
+          "match",
+          "partial_match",
+          "no_match",
+          "unverified",
+          "not_supported"
+        ],
+        "title": "CardNameMatchResult"
       },
       "PayoutProviderOption": {
         "type": "string",
@@ -24256,6 +24275,13 @@
           },
           "requireAniCheck": {
             "type": "boolean"
+          },
+          "aniBlockedResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CardNameMatchResult"
+            },
+            "description": "ANI/MAV results that block push to card. Unset blocks only NoMatch; Match never blocks."
           },
           "allowCreditForPushToCard": {
             "type": "boolean",
@@ -48953,6 +48979,13 @@
           },
           "requireAniCheck": {
             "type": "boolean"
+          },
+          "aniBlockedResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CardNameMatchResult"
+            },
+            "description": "ANI/MAV results that block push to card. Unset blocks only NoMatch; Match never blocks."
           },
           "allowCreditForPushToCard": {
             "type": "boolean",
