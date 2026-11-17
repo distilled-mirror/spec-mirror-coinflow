@@ -3530,90 +3530,6 @@
         ]
       }
     },
-    "/seller/usdc-withdraw/recipient": {
-      "post": {
-        "operationId": "marketplace_AddUsdcWithdrawRecipient",
-        "summary": "Adds a USDC recipient.",
-        "description": "Registers a solana address that can receive USDC from the merchant’s Coinflow Balance",
-        "tags": [
-          "marketplace"
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response"
-          },
-          "451": {
-            "description": "Must Complete Additional Verification",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerificationRequiredResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "description": "- The recipient's solana wallet address",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "recipient": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "recipient"
-                ]
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "merchant": []
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "marketplace_RemoveUsdcWithdrawRecipient",
-        "summary": "Removes a USDC recipient.",
-        "description": "Removes a solana address from the merchant's allowlisted USDC recipients",
-        "tags": [
-          "marketplace"
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response"
-          }
-        },
-        "requestBody": {
-          "description": "- The recipient's solana wallet address",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "recipient": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "recipient"
-                ]
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "merchant": []
-          }
-        ]
-      }
-    },
     "/seller": {
       "post": {
         "operationId": "marketplace_CreateSeller",
@@ -3646,52 +3562,6 @@
             }
           }
         }
-      }
-    },
-    "/seller/usdc-withdraw": {
-      "post": {
-        "operationId": "marketplace_SellerUsdcWithdraw",
-        "summary": "Creates a USDC withdrawal transaction for a merchant using the Coinflow Balance",
-        "description": "Creates a usdc withdrawal transaction for merchants using their Coinflow Balance, so they can withdraw USDC from it.",
-        "tags": [
-          "marketplace"
-        ],
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SellerUsdcWithdrawResponse"
-                }
-              }
-            }
-          },
-          "451": {
-            "description": "Must Complete Additional Verification",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerificationRequiredResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SellerUsdcWithdrawRequest"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "merchant": []
-          }
-        ]
       }
     },
     "/marketplace/kyc/download/{verificationId}": {
@@ -3749,54 +3619,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/GetMarketplacePurchaseLinkRequest"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "merchant": []
-          }
-        ]
-      }
-    },
-    "/marketplace/link/purchase/credits": {
-      "post": {
-        "operationId": "marketplace_GetPurchaseWithCreditsLink",
-        "summary": "Get Purchase with Credits link",
-        "description": "Get a link for a user to make a marketplace purchase with their Credits Balance",
-        "tags": [
-          "marketplace"
-        ],
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetMarketplaceLinkResponse"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true,
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "checkoutJwtToken": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "checkoutJwtToken"
-                ]
               }
             }
           }
@@ -3955,31 +3777,33 @@
         ]
       }
     },
-    "/marketplace/wallet": {
-      "post": {
-        "operationId": "marketplace_GetWalletAddressByEmail",
-        "summary": "Get wallet by email",
-        "description": "Given an email address returns the MPC wallet address for the user. Can\nbe used to pass into the SDK, query the API, and check balances.",
+    "/seller/usdc-withdraw/recipient": {
+      "delete": {
+        "operationId": "marketplace_RemoveUsdcWithdrawRecipient",
+        "summary": "Removes a USDC recipient.",
+        "description": "Removes a solana address from the merchant's allowlisted USDC recipients",
         "tags": [
           "marketplace"
         ],
         "responses": {
           "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Marketplace_GetWalletAddressByEmail_Response_200"
-                }
-              }
-            }
+            "description": "Successful response"
           }
         },
         "requestBody": {
+          "description": "- The recipient's solana wallet address",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Email"
+                "type": "object",
+                "properties": {
+                  "recipient": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "recipient"
+                ]
               }
             }
           }
@@ -6828,54 +6652,6 @@
                 },
                 "required": [
                   "customerOverrideLimit"
-                ]
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "merchant": []
-          }
-        ]
-      }
-    },
-    "/merchant/settlement-address": {
-      "post": {
-        "operationId": "merchant_SetSettlementAddress",
-        "summary": "Set Settlement Address",
-        "description": "Set the blockchain account information which will be used for settlement. Only call this if you want the money processed\nfrom credit card transactions to be sent to directly as USDC to a company owned blockchain address.",
-        "tags": [
-          "merchant"
-        ],
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalMerchantResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "address": {
-                    "type": "string"
-                  },
-                  "blockchain": {
-                    "$ref": "#/components/schemas/Blockchain"
-                  }
-                },
-                "required": [
-                  "address",
-                  "blockchain"
                 ]
               }
             }
@@ -19740,6 +19516,54 @@
         },
         "title": "IMerchantStringSettlementAddresses"
       },
+      "IMerchantUserPasskey": {
+        "type": "object",
+        "properties": {
+          "credentialId": {
+            "type": "string"
+          },
+          "publicKey": {
+            "type": "string"
+          },
+          "counter": {
+            "type": "number",
+            "format": "double"
+          },
+          "transports": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aaguid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "rpId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUsedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "credentialId",
+          "publicKey",
+          "counter",
+          "aaguid",
+          "name",
+          "rpId",
+          "createdAt"
+        ],
+        "title": "IMerchantUserPasskey"
+      },
       "SsoProvider": {
         "type": "string",
         "enum": [
@@ -19761,6 +19585,12 @@
           },
           "secret": {
             "type": "string"
+          },
+          "passkeys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IMerchantUserPasskey"
+            }
           },
           "resetNonce": {
             "type": "string"
@@ -24626,9 +24456,6 @@
           "processing": {
             "$ref": "#/components/schemas/IMerchantStringProcessing"
           },
-          "experimentalTempoV2Credits": {
-            "type": "boolean"
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -26395,34 +26222,6 @@
         ],
         "title": "CreateSellerRequest"
       },
-      "SellerUsdcWithdrawRequest": {
-        "type": "object",
-        "properties": {
-          "destination": {
-            "type": "string"
-          },
-          "amount": {
-            "$ref": "#/components/schemas/Cents"
-          }
-        },
-        "required": [
-          "destination",
-          "amount"
-        ],
-        "title": "SellerUsdcWithdrawRequest"
-      },
-      "SellerUsdcWithdrawResponse": {
-        "type": "object",
-        "properties": {
-          "transaction": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "transaction"
-        ],
-        "title": "SellerUsdcWithdrawResponse"
-      },
       "GetMarketplacePurchaseLinkRequest": {
         "type": "object",
         "properties": {
@@ -26621,36 +26420,6 @@
           "planCode"
         ],
         "title": "GetMarketplaceSubscribeLinkRequest"
-      },
-      "Email": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "pattern": "(([^<>()[\\]\\\\.,;:\\s@\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))",
-            "maxLength": 254
-          }
-        },
-        "required": [
-          "email"
-        ],
-        "title": "Email"
-      },
-      "Marketplace_GetWalletAddressByEmail_Response_200": {
-        "type": "object",
-        "properties": {
-          "blockchain": {
-            "type": "string"
-          },
-          "wallet": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "blockchain",
-          "wallet"
-        ],
-        "title": "Marketplace_GetWalletAddressByEmail_Response_200"
       },
       "Merchant_AcceptChargeback_Response_200": {
         "oneOf": [
@@ -49329,9 +49098,6 @@
           },
           "processing": {
             "$ref": "#/components/schemas/IMerchantMongooseTypesObjectIdProcessing"
-          },
-          "experimentalTempoV2Credits": {
-            "type": "boolean"
           },
           "createdAt": {
             "type": "string",
