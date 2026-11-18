@@ -12512,12 +12512,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Cents"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Cents"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -12884,12 +12884,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -13396,12 +13396,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -14152,12 +14152,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -14247,12 +14247,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -14346,12 +14346,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -14572,12 +14572,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -16052,12 +16052,12 @@
       "GetTotalsBody": {
         "type": "object",
         "properties": {
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "doNotReviewChargebackProtection": {
             "type": "boolean"
@@ -16773,12 +16773,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -16883,12 +16883,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -17694,12 +17694,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -17920,12 +17920,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -18068,12 +18068,12 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
-          "subtotal": {
-            "$ref": "#/components/schemas/Subtotal"
-          },
           "jwtToken": {
             "type": "string",
             "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
+          "subtotal": {
+            "$ref": "#/components/schemas/Subtotal"
           },
           "overrideChargebackProtectionDecision": {
             "type": "boolean"
@@ -19370,7 +19370,8 @@
           "viewer",
           "seller",
           "pos_device",
-          "destructive"
+          "destructive",
+          "cardholder"
         ],
         "description": "Which monthly-minimum model bills the merchant, selectable in merchant\nsettings. `Off` assesses no minimum; `Legacy` and `Tiered` read their\nnumbers from the merchant's MonthlyMinimum MerchantFeeSchedule row.",
         "title": "MerchantScope"
@@ -21446,6 +21447,8 @@
       "RainCardApplicationStatus": {
         "type": "string",
         "enum": [
+          "notStarted",
+          "tosNotAccepted",
           "approved",
           "pending",
           "needsInformation",
@@ -21456,6 +21459,79 @@
           "canceled"
         ],
         "title": "RainCardApplicationStatus"
+      },
+      "CardIssuanceApplicationStatement": {
+        "type": "string",
+        "enum": [
+          "I accept the E-Sign Consent.",
+          "I accept the Coinflow Card Terms and the Coinflow Spend Cashback Program Terms.",
+          "I accept the Issuer Privacy Policy.",
+          "I certify that the information I have provided is accurate and that I will abide by all the rules and requirements related to my Coinflow Spend Card.",
+          "I acknowledge that applying for the Coinflow Spend Card does not constitute unauthorized solicitation."
+        ],
+        "title": "CardIssuanceApplicationStatement"
+      },
+      "USState": {
+        "type": "string",
+        "enum": [
+          "AL",
+          "AK",
+          "AS",
+          "AZ",
+          "AR",
+          "CA",
+          "CO",
+          "CT",
+          "DE",
+          "DC",
+          "FL",
+          "GA",
+          "GU",
+          "HI",
+          "ID",
+          "IL",
+          "IN",
+          "IA",
+          "KS",
+          "KY",
+          "LA",
+          "ME",
+          "MD",
+          "MA",
+          "MI",
+          "MN",
+          "MS",
+          "MO",
+          "MT",
+          "NE",
+          "NV",
+          "NH",
+          "NJ",
+          "NM",
+          "NY",
+          "NC",
+          "ND",
+          "MP",
+          "OH",
+          "OK",
+          "OR",
+          "PA",
+          "PR",
+          "RI",
+          "SC",
+          "SD",
+          "TN",
+          "TX",
+          "UT",
+          "VT",
+          "VA",
+          "VI",
+          "WA",
+          "WV",
+          "WI",
+          "WY"
+        ],
+        "title": "USState"
       },
       "RainAccountDetails": {
         "type": "object",
@@ -21598,6 +21674,23 @@
         ],
         "title": "RainAutoTopUpSettings"
       },
+      "RainLowBalanceAlert": {
+        "type": "object",
+        "properties": {
+          "thresholdUsd": {
+            "type": "number",
+            "format": "double"
+          },
+          "armed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "thresholdUsd",
+          "armed"
+        ],
+        "title": "RainLowBalanceAlert"
+      },
       "RainPendingTopUp": {
         "type": "object",
         "properties": {
@@ -21699,6 +21792,18 @@
           "termsAcceptedBy": {
             "type": "string"
           },
+          "termsAcceptedStatements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CardIssuanceApplicationStatement"
+            }
+          },
+          "incorporationCountry": {
+            "$ref": "#/components/schemas/Country"
+          },
+          "incorporationState": {
+            "$ref": "#/components/schemas/USState"
+          },
           "lastSyncedAt": {
             "type": "string",
             "format": "date-time"
@@ -21708,6 +21813,13 @@
           },
           "autoTopUp": {
             "$ref": "#/components/schemas/RainAutoTopUpSettings"
+          },
+          "lowBalanceAlert": {
+            "$ref": "#/components/schemas/RainLowBalanceAlert"
+          },
+          "lastAlertedTopUpFailureAt": {
+            "type": "string",
+            "format": "date-time"
           },
           "pendingTopUps": {
             "type": "array",
@@ -22037,68 +22149,6 @@
           "ALLOW"
         ],
         "title": "BlockingRuleListMode"
-      },
-      "USState": {
-        "type": "string",
-        "enum": [
-          "AL",
-          "AK",
-          "AS",
-          "AZ",
-          "AR",
-          "CA",
-          "CO",
-          "CT",
-          "DE",
-          "DC",
-          "FL",
-          "GA",
-          "GU",
-          "HI",
-          "ID",
-          "IL",
-          "IN",
-          "IA",
-          "KS",
-          "KY",
-          "LA",
-          "ME",
-          "MD",
-          "MA",
-          "MI",
-          "MN",
-          "MS",
-          "MO",
-          "MT",
-          "NE",
-          "NV",
-          "NH",
-          "NJ",
-          "NM",
-          "NY",
-          "NC",
-          "ND",
-          "MP",
-          "OH",
-          "OK",
-          "OR",
-          "PA",
-          "PR",
-          "RI",
-          "SC",
-          "SD",
-          "TN",
-          "TX",
-          "UT",
-          "VT",
-          "VA",
-          "VI",
-          "WA",
-          "WV",
-          "WI",
-          "WY"
-        ],
-        "title": "USState"
       },
       "IBlockingRule": {
         "type": "object",
@@ -24253,6 +24303,9 @@
           "inheritCustomerSettingsAcrossSubmerchants": {
             "type": "boolean",
             "description": "Set on a parent: lets its submerchants' customers inherit each other's fraud-control overrides."
+          },
+          "isIsv": {
+            "type": "boolean"
           },
           "onboardingVersion": {
             "$ref": "#/components/schemas/OnboardingVersion"
@@ -31431,6 +31484,11 @@
             "format": "date-time",
             "description": "Set when a KYT-blocked payment's funds are sent back to the originating wallet; alertStatus is unset at the same time"
           },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Set by the capture write, which only matches while this is absent"
+          },
           "refundInfo": {
             "$ref": "#/components/schemas/IPaymentRefundInfo"
           },
@@ -32299,6 +32357,11 @@
             "type": "string",
             "format": "date-time",
             "description": "Set when a KYT-blocked payment's funds are sent back to the originating wallet; alertStatus is unset at the same time"
+          },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Set by the capture write, which only matches while this is absent"
           },
           "refundInfo": {
             "$ref": "#/components/schemas/IPaymentStringRefundInfo"
@@ -48897,6 +48960,9 @@
             "type": "boolean",
             "description": "Set on a parent: lets its submerchants' customers inherit each other's fraud-control overrides."
           },
+          "isIsv": {
+            "type": "boolean"
+          },
           "onboardingVersion": {
             "$ref": "#/components/schemas/OnboardingVersion"
           },
@@ -50168,6 +50234,11 @@
             "format": "date-time",
             "description": "Set when a KYT-blocked payment's funds are sent back to the originating wallet; alertStatus is unset at the same time"
           },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Set by the capture write, which only matches while this is absent"
+          },
           "refundInfo": {
             "$ref": "#/components/schemas/IPaymentMongooseTypesObjectIdRefundInfo"
           },
@@ -50936,6 +51007,10 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
+          "jwtToken": {
+            "type": "string",
+            "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
           "planCode": {
             "type": "string",
             "description": "The code of the plan to use for the subscription"
@@ -51003,6 +51078,10 @@
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
           },
+          "jwtToken": {
+            "type": "string",
+            "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
+          },
           "planCode": {
             "type": "string",
             "description": "The code of the plan to use for the subscription"
@@ -51064,6 +51143,10 @@
             "minimum": 0,
             "maximum": 100,
             "description": "If this purchase is for a seller/submerchant where the marketplace takes a fee, this is the % fee which is\ntaken from the subtotal amount."
+          },
+          "jwtToken": {
+            "type": "string",
+            "description": "This is a token encoding the parameters for the request. Allows purchase parameters to be verified\nto prevent manipulation when the checkout page is presented to the user."
           },
           "planCode": {
             "type": "string",
