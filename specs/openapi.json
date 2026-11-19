@@ -19445,7 +19445,8 @@
         "type": "string",
         "enum": [
           "metakeep",
-          "brale"
+          "brale",
+          "turnkey"
         ],
         "title": "MpcWalletProvider"
       },
@@ -19603,6 +19604,9 @@
             "$ref": "#/components/schemas/SsoProvider"
           },
           "ssoId": {
+            "type": "string"
+          },
+          "mpcSignerId": {
             "type": "string"
           }
         },
@@ -21786,6 +21790,13 @@
             "type": "string",
             "format": "date-time"
           },
+          "enabledBy": {
+            "type": "string"
+          },
+          "termsAcceptedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
           "termsAcceptedIpAddress": {
             "type": "string"
           },
@@ -23501,6 +23512,21 @@
         ],
         "title": "VendorSettingsKoard"
       },
+      "VendorSettingsTurnkey": {
+        "type": "object",
+        "properties": {
+          "signerTagId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "title": "VendorSettingsTurnkey"
+      },
       "VendorSettingsPaze": {
         "type": "object",
         "properties": {
@@ -23576,6 +23602,9 @@
           },
           "koard": {
             "$ref": "#/components/schemas/VendorSettingsKoard"
+          },
+          "turnkey": {
+            "$ref": "#/components/schemas/VendorSettingsTurnkey"
           },
           "paze": {
             "$ref": "#/components/schemas/VendorSettingsPaze"
@@ -24319,6 +24348,10 @@
                 "type": "null"
               }
             ]
+          },
+          "profileBlueprintId": {
+            "type": "string",
+            "description": "Blueprint chosen at creation; seeds the onboarding profile in place of ISV defaults."
           },
           "onboardingRequirementsRevision": {
             "type": "number",
@@ -27553,6 +27586,9 @@
       "ExternalMerchantResponseUsersItems": {
         "type": "object",
         "properties": {
+          "mpcSignerId": {
+            "type": "boolean"
+          },
           "ssoProvider": {
             "$ref": "#/components/schemas/SsoProvider"
           },
@@ -40635,10 +40671,19 @@
           "hasCustodialWallet": {
             "type": "boolean"
           },
+          "mpcWalletProvider": {
+            "$ref": "#/components/schemas/MpcWalletProvider"
+          },
+          "newWalletProvider": {
+            "$ref": "#/components/schemas/MpcWalletProvider"
+          },
           "posEnabled": {
             "type": "boolean"
           },
           "companyCardsEnabled": {
+            "type": "boolean"
+          },
+          "companyCardsVisible": {
             "type": "boolean"
           },
           "hasManagedAccounts": {
@@ -40656,8 +40701,10 @@
           "ibanEnabled",
           "hasMpcWallet",
           "hasCustodialWallet",
+          "newWalletProvider",
           "posEnabled",
           "companyCardsEnabled",
+          "companyCardsVisible",
           "hasManagedAccounts",
           "cryptoPayoutsEnabled",
           "firstPartyDirectCryptoPayoutsEnabled"
@@ -48975,6 +49022,10 @@
                 "type": "null"
               }
             ]
+          },
+          "profileBlueprintId": {
+            "type": "string",
+            "description": "Blueprint chosen at creation; seeds the onboarding profile in place of ISV defaults."
           },
           "onboardingRequirementsRevision": {
             "type": "number",
