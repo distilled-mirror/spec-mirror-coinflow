@@ -13451,6 +13451,192 @@
         ],
         "title": "ApplePayCheckoutArgs"
       },
+      "L2L3Level2": {
+        "type": "object",
+        "properties": {
+          "invoiceReference": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
+            "minLength": 1,
+            "maxLength": 15
+          }
+        },
+        "title": "L2L3Level2"
+      },
+      "L2L3DataOneOf0Level": {
+        "type": "string",
+        "enum": [
+          "level2"
+        ],
+        "title": "L2L3DataOneOf0Level"
+      },
+      "L2L3Data0": {
+        "type": "object",
+        "properties": {
+          "level2": {
+            "$ref": "#/components/schemas/L2L3Level2"
+          },
+          "level": {
+            "$ref": "#/components/schemas/L2L3DataOneOf0Level"
+          }
+        },
+        "required": [
+          "level2",
+          "level"
+        ],
+        "title": "L2L3Data0"
+      },
+      "L2L3Level3Shipping": {
+        "type": "object",
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "postalCode": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9\\x20]+$",
+            "minLength": 1,
+            "maxLength": 10
+          }
+        },
+        "required": [
+          "countryCode",
+          "postalCode"
+        ],
+        "title": "L2L3Level3Shipping"
+      },
+      "L2L3Item": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
+            "minLength": 1,
+            "maxLength": 26
+          },
+          "productCode": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
+            "minLength": 1,
+            "maxLength": 12
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "unitCost": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "unitOfMeasure": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
+            "minLength": 1,
+            "maxLength": 8
+          },
+          "commodityCode": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
+            "minLength": 1,
+            "maxLength": 12,
+            "description": "NIGP commodity code"
+          },
+          "totalTaxAmount": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "totalDiscountAmount": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "totalAmountNoTax": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "totalAmount": {
+            "$ref": "#/components/schemas/Cents"
+          }
+        },
+        "required": [
+          "name",
+          "productCode",
+          "quantity",
+          "unitCost",
+          "unitOfMeasure",
+          "commodityCode",
+          "totalTaxAmount",
+          "totalDiscountAmount",
+          "totalAmountNoTax",
+          "totalAmount"
+        ],
+        "title": "L2L3Item"
+      },
+      "L2L3Level3": {
+        "type": "object",
+        "properties": {
+          "discountAmount": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "shippingAmount": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "dutyAmount": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "shipping": {
+            "$ref": "#/components/schemas/L2L3Level3Shipping"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L2L3Item"
+            }
+          }
+        },
+        "required": [
+          "discountAmount",
+          "shippingAmount",
+          "dutyAmount",
+          "shipping",
+          "items"
+        ],
+        "title": "L2L3Level3"
+      },
+      "L2L3DataOneOf1Level": {
+        "type": "string",
+        "enum": [
+          "level3"
+        ],
+        "title": "L2L3DataOneOf1Level"
+      },
+      "L2L3Data1": {
+        "type": "object",
+        "properties": {
+          "level3": {
+            "$ref": "#/components/schemas/L2L3Level3"
+          },
+          "level2": {
+            "$ref": "#/components/schemas/L2L3Level2"
+          },
+          "level": {
+            "$ref": "#/components/schemas/L2L3DataOneOf1Level"
+          }
+        },
+        "required": [
+          "level3",
+          "level2",
+          "level"
+        ],
+        "title": "L2L3Data1"
+      },
+      "L2L3Data": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/L2L3Data0"
+          },
+          {
+            "$ref": "#/components/schemas/L2L3Data1"
+          }
+        ],
+        "title": "L2L3Data"
+      },
       "CapturePaymentRequest": {
         "type": "object",
         "properties": {
@@ -13466,13 +13652,15 @@
           },
           "transactionData": {
             "$ref": "#/components/schemas/EvmTransactionData"
+          },
+          "l2l3Data": {
+            "$ref": "#/components/schemas/L2L3Data"
           }
         },
         "required": [
           "paymentId",
           "subtotal"
         ],
-        "description": "From T, pick a set of properties whose keys are in the union K",
         "title": "CapturePaymentRequest"
       },
       "CheckoutCapturePostResponsesContentApplicationJsonSchemaJobId": {
@@ -13767,192 +13955,6 @@
         ],
         "description": "Credit card information.\n<b>Always</b> pass address unless explicitly told that you may not",
         "title": "CardCheckoutArgsCard"
-      },
-      "L2L3Level2": {
-        "type": "object",
-        "properties": {
-          "invoiceReference": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
-            "minLength": 1,
-            "maxLength": 15
-          }
-        },
-        "title": "L2L3Level2"
-      },
-      "L2L3DataOneOf0Level": {
-        "type": "string",
-        "enum": [
-          "level2"
-        ],
-        "title": "L2L3DataOneOf0Level"
-      },
-      "L2L3Data0": {
-        "type": "object",
-        "properties": {
-          "level2": {
-            "$ref": "#/components/schemas/L2L3Level2"
-          },
-          "level": {
-            "$ref": "#/components/schemas/L2L3DataOneOf0Level"
-          }
-        },
-        "required": [
-          "level2",
-          "level"
-        ],
-        "title": "L2L3Data0"
-      },
-      "L2L3Level3Shipping": {
-        "type": "object",
-        "properties": {
-          "countryCode": {
-            "type": "string",
-            "pattern": "^[A-Z]{2}$"
-          },
-          "postalCode": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9\\x20]+$",
-            "minLength": 1,
-            "maxLength": 10
-          }
-        },
-        "required": [
-          "countryCode",
-          "postalCode"
-        ],
-        "title": "L2L3Level3Shipping"
-      },
-      "L2L3Item": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
-            "minLength": 1,
-            "maxLength": 26
-          },
-          "productCode": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
-            "minLength": 1,
-            "maxLength": 12
-          },
-          "quantity": {
-            "type": "integer",
-            "minimum": 1
-          },
-          "unitCost": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "unitOfMeasure": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
-            "minLength": 1,
-            "maxLength": 8
-          },
-          "commodityCode": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9\\x20@!£*#$)(+_=.,/;:'\"-]+$",
-            "minLength": 1,
-            "maxLength": 12,
-            "description": "NIGP commodity code"
-          },
-          "totalTaxAmount": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "totalDiscountAmount": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "totalAmountNoTax": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "totalAmount": {
-            "$ref": "#/components/schemas/Cents"
-          }
-        },
-        "required": [
-          "name",
-          "productCode",
-          "quantity",
-          "unitCost",
-          "unitOfMeasure",
-          "commodityCode",
-          "totalTaxAmount",
-          "totalDiscountAmount",
-          "totalAmountNoTax",
-          "totalAmount"
-        ],
-        "title": "L2L3Item"
-      },
-      "L2L3Level3": {
-        "type": "object",
-        "properties": {
-          "discountAmount": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "shippingAmount": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "dutyAmount": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "shipping": {
-            "$ref": "#/components/schemas/L2L3Level3Shipping"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L2L3Item"
-            }
-          }
-        },
-        "required": [
-          "discountAmount",
-          "shippingAmount",
-          "dutyAmount",
-          "shipping",
-          "items"
-        ],
-        "title": "L2L3Level3"
-      },
-      "L2L3DataOneOf1Level": {
-        "type": "string",
-        "enum": [
-          "level3"
-        ],
-        "title": "L2L3DataOneOf1Level"
-      },
-      "L2L3Data1": {
-        "type": "object",
-        "properties": {
-          "level3": {
-            "$ref": "#/components/schemas/L2L3Level3"
-          },
-          "level2": {
-            "$ref": "#/components/schemas/L2L3Level2"
-          },
-          "level": {
-            "$ref": "#/components/schemas/L2L3DataOneOf1Level"
-          }
-        },
-        "required": [
-          "level3",
-          "level2",
-          "level"
-        ],
-        "title": "L2L3Data1"
-      },
-      "L2L3Data": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/L2L3Data0"
-          },
-          {
-            "$ref": "#/components/schemas/L2L3Data1"
-          }
-        ],
-        "title": "L2L3Data"
       },
       "CardCheckoutArgs": {
         "type": "object",
@@ -19371,7 +19373,8 @@
           "seller",
           "pos_device",
           "destructive",
-          "cardholder"
+          "cardholder",
+          "accounts_payable"
         ],
         "description": "Which monthly-minimum model bills the merchant, selectable in merchant\nsettings. `Off` assesses no minimum; `Legacy` and `Tiered` read their\nnumbers from the merchant's MonthlyMinimum MerchantFeeSchedule row.",
         "title": "MerchantScope"
