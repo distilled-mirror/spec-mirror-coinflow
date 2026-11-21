@@ -12558,7 +12558,7 @@
           },
           "statementDescriptor": {
             "type": "string",
-            "description": "Shown on the customer's bank statement. Up to 10 letters, digits and\nspaces, sent with no `CF ` prefix; other characters are stripped and\nlonger values are cut, never rejected.\n\nOnly used when Coinflow has enabled custom statement descriptors for the\nmerchant and the value comes from the checkout JWT or an API-key request;\notherwise the merchant's default descriptor is used."
+            "description": "Shown on the customer's bank statement. Up to 10 letters, digits and\nspaces; other characters are stripped and longer values are cut, never\nrejected.\n\nOnly used when Coinflow has enabled custom statement descriptors for the\nmerchant and the value comes from the checkout JWT or an API-key request;\notherwise the merchant's default descriptor is used."
           }
         },
         "required": [
@@ -29464,7 +29464,9 @@
           "unsupportedCardBrand",
           "unsupportedCurrency",
           "noProcessorSupport",
-          "processorUnsupported"
+          "processorUnsupported",
+          "missingData",
+          "processorRejected"
         ],
         "title": "L2L3SkipReason"
       },
@@ -32850,18 +32852,6 @@
         ],
         "title": "PaymentListResponseUserLocation"
       },
-      "PaymentListResponseEntityTag": {
-        "type": "object",
-        "properties": {
-          "coinflowEntity": {
-            "$ref": "#/components/schemas/CoinflowEntity"
-          }
-        },
-        "required": [
-          "coinflowEntity"
-        ],
-        "title": "PaymentListResponseEntityTag"
-      },
       "PaymentListResponseTotalsInvoicedRebate": {
         "type": "object",
         "properties": {
@@ -35265,9 +35255,6 @@
           "userLocation": {
             "$ref": "#/components/schemas/PaymentListResponseUserLocation"
           },
-          "entityTag": {
-            "$ref": "#/components/schemas/PaymentListResponseEntityTag"
-          },
           "error": {
             "type": "string"
           },
@@ -36861,18 +36848,6 @@
           "lat"
         ],
         "title": "PickPaymentResponseExcludeKeyofPaymentResponseMerchantUserLocation"
-      },
-      "PickPaymentResponseExcludeKeyofPaymentResponseMerchantEntityTag": {
-        "type": "object",
-        "properties": {
-          "coinflowEntity": {
-            "$ref": "#/components/schemas/CoinflowEntity"
-          }
-        },
-        "required": [
-          "coinflowEntity"
-        ],
-        "title": "PickPaymentResponseExcludeKeyofPaymentResponseMerchantEntityTag"
       },
       "PickPaymentResponseExcludeKeyofPaymentResponseMerchantCardInfoFraudReport": {
         "type": "object",
@@ -39184,9 +39159,6 @@
           "userLocation": {
             "$ref": "#/components/schemas/PickPaymentResponseExcludeKeyofPaymentResponseMerchantUserLocation"
           },
-          "entityTag": {
-            "$ref": "#/components/schemas/PickPaymentResponseExcludeKeyofPaymentResponseMerchantEntityTag"
-          },
           "error": {
             "type": "string"
           },
@@ -40798,18 +40770,6 @@
           "lat"
         ],
         "title": "PaymentWithEnhancedResponseUserLocation"
-      },
-      "PaymentWithEnhancedResponseEntityTag": {
-        "type": "object",
-        "properties": {
-          "coinflowEntity": {
-            "$ref": "#/components/schemas/CoinflowEntity"
-          }
-        },
-        "required": [
-          "coinflowEntity"
-        ],
-        "title": "PaymentWithEnhancedResponseEntityTag"
       },
       "PaymentWithEnhancedResponseCardInfoFraudReport": {
         "type": "object",
@@ -43633,9 +43593,6 @@
           },
           "userLocation": {
             "$ref": "#/components/schemas/PaymentWithEnhancedResponseUserLocation"
-          },
-          "entityTag": {
-            "$ref": "#/components/schemas/PaymentWithEnhancedResponseEntityTag"
           },
           "error": {
             "type": "string"
@@ -46834,18 +46791,6 @@
         ],
         "title": "WithdrawalResponseUserLocation"
       },
-      "WithdrawalResponseEntityTag": {
-        "type": "object",
-        "properties": {
-          "coinflowEntity": {
-            "$ref": "#/components/schemas/CoinflowEntity"
-          }
-        },
-        "required": [
-          "coinflowEntity"
-        ],
-        "title": "WithdrawalResponseEntityTag"
-      },
       "WithdrawReviewStatus": {
         "type": "string",
         "enum": [
@@ -46973,9 +46918,6 @@
           },
           "achTraceId": {
             "type": "string"
-          },
-          "entityTag": {
-            "$ref": "#/components/schemas/WithdrawalResponseEntityTag"
           },
           "status": {
             "$ref": "#/components/schemas/WithdrawStatusWithReview"
@@ -52006,12 +51948,36 @@
         "description": "From T, pick a set of properties whose keys are in the union K",
         "title": "Pick_WithdrawToken.mint-or-decimals_"
       },
+      "EvmTransferWithAuthorizationParams": {
+        "type": "object",
+        "properties": {
+          "validAfter": {
+            "type": "string"
+          },
+          "validBefore": {
+            "type": "string"
+          },
+          "nonce": {
+            "type": "string",
+            "description": "bytes32 hex string."
+          }
+        },
+        "required": [
+          "validAfter",
+          "validBefore",
+          "nonce"
+        ],
+        "title": "EvmTransferWithAuthorizationParams"
+      },
       "EvmTransferAuthorizationData": {
         "type": "object",
         "properties": {
           "data": {
             "type": "string",
             "description": "The result of the signedTypedData call from the user's wallet."
+          },
+          "transferAuthorization": {
+            "$ref": "#/components/schemas/EvmTransferWithAuthorizationParams"
           }
         },
         "required": [
@@ -52299,6 +52265,15 @@
         ],
         "title": "Withdraw_GetWithdrawBalances_Response_200"
       },
+      "EvmWithdrawAuthorizationType": {
+        "type": "string",
+        "enum": [
+          "permit",
+          "transferWithAuthorization"
+        ],
+        "description": "How the user authorizes a gasless EVM withdrawal:\n- `permit` (default): an EIP-2612 Permit for Coinflow's memo contract.\n- `transferWithAuthorization`: USDC's own EIP-3009 TransferWithAuthorization, sent straight to\n  Coinflow's settlement wallet. USDC only; any other token gets a `permit` message.",
+        "title": "EvmWithdrawAuthorizationType"
+      },
       "GetWithdrawMessageBody": {
         "type": "object",
         "properties": {
@@ -52311,6 +52286,9 @@
           },
           "userLocation": {
             "$ref": "#/components/schemas/IUserLocation"
+          },
+          "authorizationType": {
+            "$ref": "#/components/schemas/EvmWithdrawAuthorizationType"
           }
         },
         "required": [
@@ -52327,6 +52305,9 @@
               "null"
             ],
             "description": "The message that needs to be typed signed by the user's EVM wallet."
+          },
+          "transferAuthorization": {
+            "$ref": "#/components/schemas/EvmTransferWithAuthorizationParams"
           }
         },
         "required": [
