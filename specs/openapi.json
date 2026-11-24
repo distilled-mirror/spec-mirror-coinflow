@@ -7327,7 +7327,7 @@
       "delete": {
         "operationId": "merchantSubscription_DeactivatePlan",
         "summary": "Deactivate Plan",
-        "description": "Deactivate a subscription plan\nIf no subscribers, will be deleted.\nNew subscriptions will not be allowed.",
+        "description": "Deactivate a subscription plan\nNew subscriptions will not be allowed. The plan is kept and can be reactivated by updating it with `active: true`.",
         "tags": [
           "merchantSubscription"
         ],
@@ -19770,6 +19770,21 @@
         },
         "title": "MerchantGoLiveChecklist"
       },
+      "MerchantKybVendorAccount": {
+        "type": "object",
+        "properties": {
+          "vendor": {
+            "$ref": "#/components/schemas/VerificationVendor"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "referenceId": {
+            "type": "string"
+          }
+        },
+        "title": "MerchantKybVendorAccount"
+      },
       "WebhookVersion": {
         "type": "string",
         "enum": [
@@ -23621,6 +23636,83 @@
         },
         "title": "VendorSettings"
       },
+      "MpcMigrationStatus": {
+        "type": "string",
+        "enum": [
+          "initial",
+          "setup",
+          "transfer",
+          "complete",
+          "failed"
+        ],
+        "title": "MpcMigrationStatus"
+      },
+      "MpcMigrationTransfer": {
+        "type": "object",
+        "properties": {
+          "stableCoin": {
+            "$ref": "#/components/schemas/StableCoin"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "transferredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "failedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "stableCoin"
+        ],
+        "title": "MpcMigrationTransfer"
+      },
+      "MpcMigration": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/MpcMigrationStatus"
+          },
+          "priorAddress": {
+            "type": "string"
+          },
+          "priorProvider": {
+            "$ref": "#/components/schemas/MpcWalletProvider"
+          },
+          "newAddress": {
+            "type": "string"
+          },
+          "newProvider": {
+            "$ref": "#/components/schemas/MpcWalletProvider"
+          },
+          "transfers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MpcMigrationTransfer"
+            }
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "priorAddress",
+          "priorProvider",
+          "newProvider"
+        ],
+        "title": "MpcMigration"
+      },
       "MerchantBankSettlementOptions": {
         "type": "object",
         "properties": {
@@ -24089,6 +24181,9 @@
             "type": "string",
             "format": "date-time"
           },
+          "kybVendorAccount": {
+            "$ref": "#/components/schemas/MerchantKybVendorAccount"
+          },
           "webhookSettings": {
             "$ref": "#/components/schemas/WebhookSettings"
           },
@@ -24411,6 +24506,9 @@
           },
           "vendorSettings": {
             "$ref": "#/components/schemas/VendorSettings"
+          },
+          "mpcMigration": {
+            "$ref": "#/components/schemas/MpcMigration"
           },
           "generatedDescription": {
             "type": "string"
@@ -26972,6 +27070,9 @@
           },
           "ipAddress": {
             "type": "string"
+          },
+          "userAgent": {
+            "type": "string"
           }
         },
         "required": [
@@ -27030,6 +27131,9 @@
             "description": "A Coinflow admin acting through merchant impersonation."
           },
           "ipAddress": {
+            "type": "string"
+          },
+          "userAgent": {
             "type": "string"
           },
           "downloadedAt": {
@@ -27788,6 +27892,9 @@
           },
           "blockCardReuseAcrossCustomers": {
             "type": "boolean"
+          },
+          "mitSettings": {
+            "$ref": "#/components/schemas/CardOnFileSettings"
           },
           "cardOnFileSettings": {
             "$ref": "#/components/schemas/CardOnFileSettings"
@@ -32713,6 +32820,9 @@
             "type": "string",
             "format": "date-time"
           },
+          "lateArrival": {
+            "type": "boolean"
+          },
           "decidedAt": {
             "type": "string",
             "format": "date-time"
@@ -36705,6 +36815,10 @@
             "type": "string",
             "format": "date-time"
           },
+          "payoutRetries": {
+            "type": "number",
+            "format": "double"
+          },
           "idempotencyKey": {
             "type": "string"
           },
@@ -39372,6 +39486,9 @@
             "type": "string",
             "format": "date-time"
           },
+          "lateArrival": {
+            "type": "boolean"
+          },
           "chargebackFeeCents": {
             "type": "number",
             "format": "double"
@@ -40628,6 +40745,15 @@
         ],
         "title": "JobStatusResponse"
       },
+      "MpcMigrationAvailability": {
+        "type": "string",
+        "enum": [
+          "available",
+          "in_progress",
+          "unavailable"
+        ],
+        "title": "MpcMigrationAvailability"
+      },
       "MerchantCapabilities": {
         "type": "object",
         "properties": {
@@ -40651,6 +40777,9 @@
           },
           "newWalletProvider": {
             "$ref": "#/components/schemas/MpcWalletProvider"
+          },
+          "mpcMigration": {
+            "$ref": "#/components/schemas/MpcMigrationAvailability"
           },
           "posEnabled": {
             "type": "boolean"
@@ -40677,6 +40806,7 @@
           "hasMpcWallet",
           "hasCustodialWallet",
           "newWalletProvider",
+          "mpcMigration",
           "posEnabled",
           "companyCardsEnabled",
           "companyCardsVisible",
@@ -47870,6 +48000,30 @@
         ],
         "title": "OnboardingStep"
       },
+      "OnboardingQuestionsMode": {
+        "type": "string",
+        "enum": [
+          "static",
+          "dynamic"
+        ],
+        "title": "OnboardingQuestionsMode"
+      },
+      "OnboardingQuestionsSummary": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/OnboardingQuestionsMode"
+          },
+          "initialOnboardingAssignmentId": {
+            "type": "string",
+            "description": "Set once a dynamic merchant's questions have been issued."
+          }
+        },
+        "required": [
+          "mode"
+        ],
+        "title": "OnboardingQuestionsSummary"
+      },
       "OnboardingSummary": {
         "type": "object",
         "properties": {
@@ -47898,6 +48052,9 @@
               "$ref": "#/components/schemas/OnboardingStep"
             },
             "description": "Only the steps that apply to this merchant, in order."
+          },
+          "questions": {
+            "$ref": "#/components/schemas/OnboardingQuestionsSummary"
           }
         },
         "required": [
@@ -47906,7 +48063,8 @@
           "requirementsStatus",
           "requirementsRevision",
           "openRfiCount",
-          "steps"
+          "steps",
+          "questions"
         ],
         "title": "OnboardingSummary"
       },
@@ -48705,6 +48863,9 @@
             "type": "string",
             "format": "date-time"
           },
+          "kybVendorAccount": {
+            "$ref": "#/components/schemas/MerchantKybVendorAccount"
+          },
           "webhookSettings": {
             "$ref": "#/components/schemas/WebhookSettings"
           },
@@ -49027,6 +49188,9 @@
           },
           "vendorSettings": {
             "$ref": "#/components/schemas/VendorSettings"
+          },
+          "mpcMigration": {
+            "$ref": "#/components/schemas/MpcMigration"
           },
           "generatedDescription": {
             "type": "string"
