@@ -2850,7 +2850,7 @@
       "post": {
         "operationId": "customers_PlaidCheck",
         "summary": "Bank Account Status Check",
-        "description": "Checks whether a customer's linked bank account is still active and\nvalid. Returns a normalized status (`active`, `removed`, `login_required`,\nor `error`) that merchants can use to gate transaction attempts before\nsubmission.",
+        "description": "Checks whether a customer's linked bank account is still active and\nvalid. Returns a normalized status (`active`, `removed`, `login_required`,\nor `error`) that merchants can use to gate transaction attempts before\nsubmission.\n\nInstead of polling this endpoint, you can subscribe to the `Bank Account\nStatus Updated` webhook, which is sent whenever a linked bank account's\nstatus changes.",
         "tags": [
           "customers"
         ],
@@ -17870,6 +17870,9 @@
           "plaidAccessToken": {
             "type": "string"
           },
+          "plaidItemId": {
+            "type": "string"
+          },
           "plaidAccountType": {
             "type": "string"
           },
@@ -18716,6 +18719,9 @@
             "type": "string"
           },
           "businessName": {
+            "type": "string"
+          },
+          "plaidItemId": {
             "type": "string"
           },
           "plaidAccountType": {
@@ -19844,6 +19850,7 @@
           "Withdraw On Hold",
           "Payout Account Linked",
           "Bank Account Name Match Failed",
+          "Bank Account Status Updated",
           "Interac PIN",
           "Seller Blocked",
           "Refund",
@@ -22236,6 +22243,13 @@
             "type": "boolean",
             "description": "When true, disables wallet balance payments for invoices. Merchants must use checkout."
           },
+          "blockedBins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Card BINs declined at checkout before orchestration. Each entry is a 6-8\ndigit prefix or an inclusive equal-length range (`411100-411199`); see\n`BlockedBins`."
+          },
           "blockingRules": {
             "type": "array",
             "items": {
@@ -22701,6 +22715,15 @@
           "bastion"
         ],
         "title": "SettlementLocations"
+      },
+      "DuplicateWithdrawerPolicy": {
+        "type": "string",
+        "enum": [
+          "allow_all",
+          "block_blocked",
+          "block_all"
+        ],
+        "title": "DuplicateWithdrawerPolicy"
       },
       "Partial_Record_Currency.number__": {
         "type": "object",
@@ -24481,6 +24504,9 @@
           },
           "banDuplicateAccounts": {
             "type": "boolean"
+          },
+          "duplicateWithdrawerPolicy": {
+            "$ref": "#/components/schemas/DuplicateWithdrawerPolicy"
           },
           "fxFees": {
             "$ref": "#/components/schemas/Partial_Record_Currency.number__"
@@ -28373,6 +28399,12 @@
           "disableInvoiceWalletPayment": {
             "type": "boolean"
           },
+          "blockedBins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "blockingRules": {
             "type": "array",
             "items": {
@@ -28763,6 +28795,9 @@
           "parent": {
             "type": "string"
           },
+          "isIsv": {
+            "type": "boolean"
+          },
           "globalOnboarding": {
             "type": "boolean"
           },
@@ -28900,6 +28935,13 @@
         ],
         "title": "AchReturnRate"
       },
+      "AvailabilitySource": {
+        "type": "string",
+        "enum": [
+          "duplicate_identity"
+        ],
+        "title": "AvailabilitySource"
+      },
       "IAvailability": {
         "type": "object",
         "properties": {
@@ -28915,6 +28957,9 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "source": {
+            "$ref": "#/components/schemas/AvailabilitySource"
           }
         },
         "required": [
@@ -31444,6 +31489,33 @@
         ],
         "title": "EntityTag"
       },
+      "CustomerRiskActionSource": {
+        "type": "string",
+        "enum": [
+          "rule",
+          "manual"
+        ],
+        "title": "CustomerRiskActionSource"
+      },
+      "IPaymentSightlineBlock": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/CustomerRiskActionSource"
+          },
+          "ruleIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "source",
+          "ruleIds"
+        ],
+        "title": "IPaymentSightlineBlock"
+      },
       "IPaymentVendorTransferExternalItems": {
         "type": "object",
         "properties": {
@@ -31650,6 +31722,9 @@
           },
           "entityTag": {
             "$ref": "#/components/schemas/EntityTag"
+          },
+          "sightlineBlock": {
+            "$ref": "#/components/schemas/IPaymentSightlineBlock"
           },
           "vendorTransfer": {
             "$ref": "#/components/schemas/IPaymentVendorTransfer"
@@ -32525,6 +32600,9 @@
           "entityTag": {
             "$ref": "#/components/schemas/EntityTag"
           },
+          "sightlineBlock": {
+            "$ref": "#/components/schemas/IPaymentSightlineBlock"
+          },
           "vendorTransfer": {
             "$ref": "#/components/schemas/IPaymentStringVendorTransfer"
           },
@@ -33399,6 +33477,9 @@
       "PaymentListResponseCustomerAvailability": {
         "type": "object",
         "properties": {
+          "source": {
+            "$ref": "#/components/schemas/AvailabilitySource"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
@@ -36369,6 +36450,10 @@
             "type": "boolean",
             "description": "When true, this withdrawer is exempt from the merchant\n`banDuplicateAccounts` re-use check, so it may add an account that another\nwithdrawer already uses without being blocked (423 `PAYMENT_METHOD_IN_USE`)."
           },
+          "duplicateIdentityExempt": {
+            "type": "boolean",
+            "description": "When true, the merchant's `duplicateWithdrawerPolicy` never blocks this\nwithdrawer for sharing a verified identity with another withdrawer. It\nstill counts as a match when checking other withdrawers."
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -36462,6 +36547,10 @@
           "blockCardReuseExempt": {
             "type": "boolean",
             "description": "When true, this withdrawer is exempt from the merchant\n`banDuplicateAccounts` re-use check, so it may add an account that another\nwithdrawer already uses without being blocked (423 `PAYMENT_METHOD_IN_USE`)."
+          },
+          "duplicateIdentityExempt": {
+            "type": "boolean",
+            "description": "When true, the merchant's `duplicateWithdrawerPolicy` never blocks this\nwithdrawer for sharing a verified identity with another withdrawer. It\nstill counts as a match when checking other withdrawers."
           },
           "createdAt": {
             "type": "string",
@@ -37864,6 +37953,9 @@
       "PickPaymentResponseExcludeKeyofPaymentResponseMerchantCustomerAvailability": {
         "type": "object",
         "properties": {
+          "source": {
+            "$ref": "#/components/schemas/AvailabilitySource"
+          },
           "updatedAt": {
             "type": "string",
             "format": "date-time"
@@ -46220,6 +46312,34 @@
         ],
         "title": "BankAccountNameMatchFailedWebhookData"
       },
+      "BankAccountStatusUpdatedWebhookData": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The customer id, or the withdrawer's wallet, the bank account belongs to."
+          },
+          "bankAccountToken": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PlaidAccountStatus"
+          },
+          "errorCode": {
+            "type": "string"
+          },
+          "errorMessage": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "bankAccountToken",
+          "status"
+        ],
+        "description": "Same shape as one entry of the bank account status check response, minus the\nbalance.",
+        "title": "BankAccountStatusUpdatedWebhookData"
+      },
       "ConfigChangeDiffPreviousValueRaw": {
         "oneOf": [
           {
@@ -46384,6 +46504,9 @@
           },
           {
             "$ref": "#/components/schemas/BankAccountNameMatchFailedWebhookData"
+          },
+          {
+            "$ref": "#/components/schemas/BankAccountStatusUpdatedWebhookData"
           },
           {
             "$ref": "#/components/schemas/ConfigChangeWebhookData"
@@ -47163,6 +47286,10 @@
           "blockCardReuseExempt": {
             "type": "boolean",
             "description": "When true, this withdrawer is exempt from the merchant\n`banDuplicateAccounts` re-use check, so it may add an account that another\nwithdrawer already uses without being blocked (423 `PAYMENT_METHOD_IN_USE`)."
+          },
+          "duplicateIdentityExempt": {
+            "type": "boolean",
+            "description": "When true, the merchant's `duplicateWithdrawerPolicy` never blocks this\nwithdrawer for sharing a verified identity with another withdrawer. It\nstill counts as a match when checking other withdrawers."
           },
           "createdAt": {
             "type": "string",
@@ -48613,6 +48740,13 @@
             "type": "boolean",
             "description": "When true, disables wallet balance payments for invoices. Merchants must use checkout."
           },
+          "blockedBins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Card BINs declined at checkout before orchestration. Each entry is a 6-8\ndigit prefix or an inclusive equal-length range (`411100-411199`); see\n`BlockedBins`."
+          },
           "blockingRules": {
             "type": "array",
             "items": {
@@ -49163,6 +49297,9 @@
           },
           "banDuplicateAccounts": {
             "type": "boolean"
+          },
+          "duplicateWithdrawerPolicy": {
+            "$ref": "#/components/schemas/DuplicateWithdrawerPolicy"
           },
           "fxFees": {
             "$ref": "#/components/schemas/Partial_Record_Currency.number__"
@@ -50412,6 +50549,9 @@
           },
           "entityTag": {
             "$ref": "#/components/schemas/EntityTag"
+          },
+          "sightlineBlock": {
+            "$ref": "#/components/schemas/IPaymentSightlineBlock"
           },
           "vendorTransfer": {
             "$ref": "#/components/schemas/IPaymentMongooseTypesObjectIdVendorTransfer"
@@ -51746,6 +51886,10 @@
             "type": "boolean",
             "description": "When true, this withdrawer is exempt from the merchant\n`banDuplicateAccounts` re-use check, so it may add an account that another\nwithdrawer already uses without being blocked (423 `PAYMENT_METHOD_IN_USE`)."
           },
+          "duplicateIdentityExempt": {
+            "type": "boolean",
+            "description": "When true, the merchant's `duplicateWithdrawerPolicy` never blocks this\nwithdrawer for sharing a verified identity with another withdrawer. It\nstill counts as a match when checking other withdrawers."
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -52941,6 +53085,10 @@
             "type": "boolean",
             "description": "When true, this withdrawer is exempt from the merchant\n`banDuplicateAccounts` re-use check, so it may add an account that another\nwithdrawer already uses without being blocked (423 `PAYMENT_METHOD_IN_USE`)."
           },
+          "duplicateIdentityExempt": {
+            "type": "boolean",
+            "description": "When true, the merchant's `duplicateWithdrawerPolicy` never blocks this\nwithdrawer for sharing a verified identity with another withdrawer. It\nstill counts as a match when checking other withdrawers."
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -53104,6 +53252,10 @@
           "blockCardReuseExempt": {
             "type": "boolean",
             "description": "When true, this withdrawer is exempt from the merchant\n`banDuplicateAccounts` re-use check, so it may add an account that another\nwithdrawer already uses without being blocked (423 `PAYMENT_METHOD_IN_USE`)."
+          },
+          "duplicateIdentityExempt": {
+            "type": "boolean",
+            "description": "When true, the merchant's `duplicateWithdrawerPolicy` never blocks this\nwithdrawer for sharing a verified identity with another withdrawer. It\nstill counts as a match when checking other withdrawers."
           },
           "createdAt": {
             "type": "string",
