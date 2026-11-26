@@ -9003,6 +9003,42 @@
         ]
       }
     },
+    "/withdraw/local-bank": {
+      "post": {
+        "operationId": "withdraw_CreateLocalBankAccount",
+        "summary": "Create Local Bank Account",
+        "description": "Adds a domestic bank account in the withdrawer's country for local bank\ntransfer payouts (`speed: local_bank`). Australia (BSB + account number)\nis supported for individuals. Returns the saved account without the full\naccount number.\n\nInvalid input returns 400 with `code: local_bank_field_invalid` and the\noffending `field` (`bsb`, `accountNumber`, `accountHolderName`, `address`\nor `country`).",
+        "tags": [
+          "withdraw"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pick_ILocalBankAccount.Exclude_keyofILocalBankAccount.accountHash-or-vendorData__"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddLocalBankAccountArgs"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "userId": []
+          }
+        ]
+      }
+    },
     "/withdraw/pix": {
       "post": {
         "operationId": "withdraw_CreatePixAccount",
@@ -9315,6 +9351,43 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Withdraw_DeleteWithdrawerInterac_Response_200"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "userId": []
+          }
+        ]
+      }
+    },
+    "/withdraw/local-bank/{token}": {
+      "delete": {
+        "operationId": "withdraw_DeleteLocalBankAccount",
+        "summary": "Delete Withdrawer Local Bank Account",
+        "description": "Deletes a local bank account for a particular user. Saved payouts to it\nare unaffected.",
+        "tags": [
+          "withdraw"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Withdraw_DeleteLocalBankAccount_Response_200"
                 }
               }
             }
@@ -19111,6 +19184,9 @@
           "swift": {
             "$ref": "#/components/schemas/WithdrawFeeConfig"
           },
+          "npp": {
+            "$ref": "#/components/schemas/WithdrawFeeConfig"
+          },
           "crypto": {
             "$ref": "#/components/schemas/WithdrawFeeConfig"
           }
@@ -19295,6 +19371,9 @@
             "$ref": "#/components/schemas/CustomWithdrawFeeValue"
           },
           "swift": {
+            "$ref": "#/components/schemas/CustomWithdrawFeeValue"
+          },
+          "npp": {
             "$ref": "#/components/schemas/CustomWithdrawFeeValue"
           },
           "crypto": {
@@ -22433,297 +22512,25 @@
         ],
         "title": "EftPayoutProvider"
       },
-      "CardPayoutProvider": {
+      "LocalBankPayoutProvider": {
         "type": "string",
         "enum": [
-          "aptpay",
-          "checkbook",
-          "shift4",
-          "citcon",
-          "crb",
-          "MOCK"
+          "citcon"
         ],
-        "title": "CardPayoutProvider"
+        "title": "LocalBankPayoutProvider"
       },
-      "ApplePayPayoutProvider": {
-        "type": "string",
-        "enum": [
-          "aptpay",
-          "MOCK"
-        ],
-        "title": "ApplePayPayoutProvider"
-      },
-      "VenmoPayoutProvider": {
-        "type": "string",
-        "enum": [
-          "checkbook",
-          "citcon",
-          "mock",
-          "paypal"
-        ],
-        "title": "VenmoPayoutProvider"
-      },
-      "PayPalPayoutProvider": {
-        "type": "string",
-        "enum": [
-          "checkbook",
-          "citcon",
-          "mock",
-          "paypal"
-        ],
-        "title": "PayPalPayoutProvider"
-      },
-      "WirePayoutProvider": {
-        "type": "string",
-        "enum": [
-          "MOCK",
-          "BRAID"
-        ],
-        "title": "WirePayoutProvider"
-      },
-      "CryptoPayoutProvider": {
-        "type": "string",
-        "enum": [
-          "glide",
-          "relay",
-          "direct",
-          "mock"
-        ],
-        "title": "CryptoPayoutProvider"
-      },
-      "InteracPayoutProvider": {
-        "type": "string",
-        "enum": [
-          "checkbook",
-          "mock",
-          "aptpay"
-        ],
-        "title": "InteracPayoutProvider"
-      },
-      "InteracProcessor": {
-        "type": "string",
-        "enum": [
-          "mock",
-          "aptpay"
-        ],
-        "title": "InteracProcessor"
-      },
-      "InteracSettings": {
+      "Partial_Record_LocalRailSpeed.LocalBankPayoutProvider-Array__": {
         "type": "object",
         "properties": {
-          "rebateBps": {
-            "type": "number",
-            "format": "double"
-          },
-          "rebateFixed": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "processor": {
-            "$ref": "#/components/schemas/InteracProcessor"
-          },
-          "feeMode": {
-            "$ref": "#/components/schemas/FeePayerMode"
-          },
-          "fxFeeMode": {
-            "$ref": "#/components/schemas/FeePayerMode"
-          },
-          "fixedFee": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "feeBps": {
-            "type": "number",
-            "format": "double"
-          },
-          "minFee": {
-            "$ref": "#/components/schemas/Cents"
-          },
-          "customerEmailNotifications": {
-            "type": "boolean"
-          },
-          "merchantEmailNotifications": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "customerEmailNotifications",
-          "merchantEmailNotifications"
-        ],
-        "title": "InteracSettings"
-      },
-      "WithdrawSort": {
-        "type": "string",
-        "enum": [
-          "DEFAULT",
-          "CHEAPEST",
-          "ORDERED",
-          "LIMIT_CONSUMPTION"
-        ],
-        "title": "WithdrawSort"
-      },
-      "Partial_Record_WithdrawSpeed.WithdrawSort__": {
-        "type": "object",
-        "properties": {
-          "asap": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "same_day": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "standard": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "card": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "iban": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "pix": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "eft": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "venmo": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "paypal": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "wire": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "interac": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "swift": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          },
-          "crypto": {
-            "$ref": "#/components/schemas/WithdrawSort"
-          }
-        },
-        "description": "Make all properties in T optional",
-        "title": "Partial_Record_WithdrawSpeed.WithdrawSort__"
-      },
-      "IMerchantStringFirstPartyPayoutOverrides": {
-        "type": "object",
-        "properties": {
-          "interacPayoutProvider": {
-            "$ref": "#/components/schemas/InteracPayoutProvider"
-          },
-          "wirePayoutProvider": {
+          "npp": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WirePayoutProvider"
-            }
-          },
-          "paypalPayoutProvider": {
-            "$ref": "#/components/schemas/PayPalPayoutProvider"
-          },
-          "venmoPayoutProvider": {
-            "$ref": "#/components/schemas/VenmoPayoutProvider"
-          },
-          "appleP2cPayoutProvider": {
-            "$ref": "#/components/schemas/ApplePayPayoutProvider"
-          },
-          "globalP2cPayoutProvider": {
-            "$ref": "#/components/schemas/CardPayoutProvider"
-          },
-          "p2cPayoutProvider": {
-            "$ref": "#/components/schemas/CardPayoutProvider"
-          },
-          "eftPayoutProvider": {
-            "$ref": "#/components/schemas/EftPayoutProvider"
-          },
-          "pixPayoutProvider": {
-            "$ref": "#/components/schemas/PixPayoutProvider"
-          },
-          "rtpPayoutProvider": {
-            "$ref": "#/components/schemas/RtpPayoutProvider"
-          },
-          "ibanPayoutProvider": {
-            "$ref": "#/components/schemas/IbanPayoutProvider"
-          },
-          "bankPayoutProvider": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PayoutProviderOption"
+              "$ref": "#/components/schemas/LocalBankPayoutProvider"
             }
           }
         },
-        "title": "IMerchantStringFirstPartyPayoutOverrides",
-        "deprecated": true
-      },
-      "OnboardingVersion": {
-        "type": "string",
-        "enum": [
-          "legacy",
-          "sdd",
-          "global"
-        ],
-        "title": "OnboardingVersion"
-      },
-      "OnboardingStepState": {
-        "type": "string",
-        "enum": [
-          "blocked",
-          "action_required",
-          "in_review",
-          "complete"
-        ],
-        "title": "OnboardingStepState"
-      },
-      "Partial_Record_OnboardingStepKey.OnboardingStepState__": {
-        "type": "object",
-        "properties": {
-          "profile": {
-            "$ref": "#/components/schemas/OnboardingStepState"
-          },
-          "corporate_structure": {
-            "$ref": "#/components/schemas/OnboardingStepState"
-          },
-          "verification": {
-            "$ref": "#/components/schemas/OnboardingStepState"
-          },
-          "questions": {
-            "$ref": "#/components/schemas/OnboardingStepState"
-          },
-          "terms": {
-            "$ref": "#/components/schemas/OnboardingStepState"
-          },
-          "application": {
-            "$ref": "#/components/schemas/OnboardingStepState"
-          },
-          "wallet": {
-            "$ref": "#/components/schemas/OnboardingStepState"
-          },
-          "bank_account": {
-            "$ref": "#/components/schemas/OnboardingStepState"
-          }
-        },
         "description": "Make all properties in T optional",
-        "title": "Partial_Record_OnboardingStepKey.OnboardingStepState__"
-      },
-      "SettlementLocations": {
-        "type": "string",
-        "enum": [
-          "circle",
-          "brale",
-          "paper",
-          "brale_youpay",
-          "bastion"
-        ],
-        "title": "SettlementLocations"
-      },
-      "DuplicateWithdrawerPolicy": {
-        "type": "string",
-        "enum": [
-          "allow_all",
-          "block_blocked",
-          "block_all"
-        ],
-        "title": "DuplicateWithdrawerPolicy"
+        "title": "Partial_Record_LocalRailSpeed.LocalBankPayoutProvider-Array__"
       },
       "Partial_Record_Currency.number__": {
         "type": "object",
@@ -23355,6 +23162,301 @@
         },
         "description": "Make all properties in T optional",
         "title": "Partial_Record_Currency.number__"
+      },
+      "CardPayoutProvider": {
+        "type": "string",
+        "enum": [
+          "aptpay",
+          "checkbook",
+          "shift4",
+          "citcon",
+          "crb",
+          "MOCK"
+        ],
+        "title": "CardPayoutProvider"
+      },
+      "ApplePayPayoutProvider": {
+        "type": "string",
+        "enum": [
+          "aptpay",
+          "MOCK"
+        ],
+        "title": "ApplePayPayoutProvider"
+      },
+      "VenmoPayoutProvider": {
+        "type": "string",
+        "enum": [
+          "checkbook",
+          "citcon",
+          "mock",
+          "paypal"
+        ],
+        "title": "VenmoPayoutProvider"
+      },
+      "PayPalPayoutProvider": {
+        "type": "string",
+        "enum": [
+          "checkbook",
+          "citcon",
+          "mock",
+          "paypal"
+        ],
+        "title": "PayPalPayoutProvider"
+      },
+      "WirePayoutProvider": {
+        "type": "string",
+        "enum": [
+          "MOCK",
+          "BRAID"
+        ],
+        "title": "WirePayoutProvider"
+      },
+      "CryptoPayoutProvider": {
+        "type": "string",
+        "enum": [
+          "glide",
+          "relay",
+          "direct",
+          "mock"
+        ],
+        "title": "CryptoPayoutProvider"
+      },
+      "InteracPayoutProvider": {
+        "type": "string",
+        "enum": [
+          "checkbook",
+          "mock",
+          "aptpay"
+        ],
+        "title": "InteracPayoutProvider"
+      },
+      "InteracProcessor": {
+        "type": "string",
+        "enum": [
+          "mock",
+          "aptpay"
+        ],
+        "title": "InteracProcessor"
+      },
+      "InteracSettings": {
+        "type": "object",
+        "properties": {
+          "rebateBps": {
+            "type": "number",
+            "format": "double"
+          },
+          "rebateFixed": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "processor": {
+            "$ref": "#/components/schemas/InteracProcessor"
+          },
+          "feeMode": {
+            "$ref": "#/components/schemas/FeePayerMode"
+          },
+          "fxFeeMode": {
+            "$ref": "#/components/schemas/FeePayerMode"
+          },
+          "fixedFee": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "feeBps": {
+            "type": "number",
+            "format": "double"
+          },
+          "minFee": {
+            "$ref": "#/components/schemas/Cents"
+          },
+          "customerEmailNotifications": {
+            "type": "boolean"
+          },
+          "merchantEmailNotifications": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "customerEmailNotifications",
+          "merchantEmailNotifications"
+        ],
+        "title": "InteracSettings"
+      },
+      "WithdrawSort": {
+        "type": "string",
+        "enum": [
+          "DEFAULT",
+          "CHEAPEST",
+          "ORDERED",
+          "LIMIT_CONSUMPTION"
+        ],
+        "title": "WithdrawSort"
+      },
+      "Partial_Record_WithdrawSpeed.WithdrawSort__": {
+        "type": "object",
+        "properties": {
+          "asap": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "same_day": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "standard": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "card": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "iban": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "pix": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "eft": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "venmo": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "paypal": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "wire": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "interac": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "swift": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "npp": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          },
+          "crypto": {
+            "$ref": "#/components/schemas/WithdrawSort"
+          }
+        },
+        "description": "Make all properties in T optional",
+        "title": "Partial_Record_WithdrawSpeed.WithdrawSort__"
+      },
+      "IMerchantStringFirstPartyPayoutOverrides": {
+        "type": "object",
+        "properties": {
+          "interacPayoutProvider": {
+            "$ref": "#/components/schemas/InteracPayoutProvider"
+          },
+          "wirePayoutProvider": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WirePayoutProvider"
+            }
+          },
+          "paypalPayoutProvider": {
+            "$ref": "#/components/schemas/PayPalPayoutProvider"
+          },
+          "venmoPayoutProvider": {
+            "$ref": "#/components/schemas/VenmoPayoutProvider"
+          },
+          "appleP2cPayoutProvider": {
+            "$ref": "#/components/schemas/ApplePayPayoutProvider"
+          },
+          "globalP2cPayoutProvider": {
+            "$ref": "#/components/schemas/CardPayoutProvider"
+          },
+          "p2cPayoutProvider": {
+            "$ref": "#/components/schemas/CardPayoutProvider"
+          },
+          "eftPayoutProvider": {
+            "$ref": "#/components/schemas/EftPayoutProvider"
+          },
+          "pixPayoutProvider": {
+            "$ref": "#/components/schemas/PixPayoutProvider"
+          },
+          "rtpPayoutProvider": {
+            "$ref": "#/components/schemas/RtpPayoutProvider"
+          },
+          "ibanPayoutProvider": {
+            "$ref": "#/components/schemas/IbanPayoutProvider"
+          },
+          "bankPayoutProvider": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PayoutProviderOption"
+            }
+          }
+        },
+        "title": "IMerchantStringFirstPartyPayoutOverrides",
+        "deprecated": true
+      },
+      "OnboardingVersion": {
+        "type": "string",
+        "enum": [
+          "legacy",
+          "sdd",
+          "global"
+        ],
+        "title": "OnboardingVersion"
+      },
+      "OnboardingStepState": {
+        "type": "string",
+        "enum": [
+          "blocked",
+          "action_required",
+          "in_review",
+          "complete"
+        ],
+        "title": "OnboardingStepState"
+      },
+      "Partial_Record_OnboardingStepKey.OnboardingStepState__": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/OnboardingStepState"
+          },
+          "corporate_structure": {
+            "$ref": "#/components/schemas/OnboardingStepState"
+          },
+          "verification": {
+            "$ref": "#/components/schemas/OnboardingStepState"
+          },
+          "questions": {
+            "$ref": "#/components/schemas/OnboardingStepState"
+          },
+          "terms": {
+            "$ref": "#/components/schemas/OnboardingStepState"
+          },
+          "application": {
+            "$ref": "#/components/schemas/OnboardingStepState"
+          },
+          "wallet": {
+            "$ref": "#/components/schemas/OnboardingStepState"
+          },
+          "bank_account": {
+            "$ref": "#/components/schemas/OnboardingStepState"
+          }
+        },
+        "description": "Make all properties in T optional",
+        "title": "Partial_Record_OnboardingStepKey.OnboardingStepState__"
+      },
+      "SettlementLocations": {
+        "type": "string",
+        "enum": [
+          "circle",
+          "brale",
+          "paper",
+          "brale_youpay",
+          "bastion"
+        ],
+        "title": "SettlementLocations"
+      },
+      "DuplicateWithdrawerPolicy": {
+        "type": "string",
+        "enum": [
+          "allow_all",
+          "block_blocked",
+          "block_all"
+        ],
+        "title": "DuplicateWithdrawerPolicy"
       },
       "BlockedLevel": {
         "type": "string",
@@ -24361,6 +24463,12 @@
             "items": {
               "$ref": "#/components/schemas/EftPayoutProvider"
             }
+          },
+          "localRailPayoutProviders": {
+            "$ref": "#/components/schemas/Partial_Record_LocalRailSpeed.LocalBankPayoutProvider-Array__"
+          },
+          "payoutFxMarkupBps": {
+            "$ref": "#/components/schemas/Partial_Record_Currency.number__"
           },
           "eftPayoutProvider": {
             "$ref": "#/components/schemas/EftPayoutProvider"
@@ -26661,6 +26769,7 @@
           "wire",
           "interac",
           "swift",
+          "npp",
           "crypto"
         ],
         "title": "WithdrawSpeed"
@@ -28435,6 +28544,15 @@
         },
         "title": "ExternalMerchantResponseWithdrawFeePayment"
       },
+      "ExternalMerchantResponseLocalRailPayoutProviders": {
+        "type": "object",
+        "properties": {
+          "npp": {
+            "type": "boolean"
+          }
+        },
+        "title": "ExternalMerchantResponseLocalRailPayoutProviders"
+      },
       "ExternalMerchantResponseInteracSettingsMinFee": {
         "type": "object",
         "properties": {
@@ -28764,6 +28882,9 @@
           },
           "eftPayoutProviders": {
             "type": "boolean"
+          },
+          "localRailPayoutProviders": {
+            "$ref": "#/components/schemas/ExternalMerchantResponseLocalRailPayoutProviders"
           },
           "p2cPayoutProviders": {
             "type": "boolean"
@@ -36658,6 +36779,70 @@
         ],
         "title": "WithdrawFailedReturnStatus"
       },
+      "IWithdrawLocalPayoutLateFailure": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "at"
+        ],
+        "title": "IWithdrawLocalPayoutLateFailure"
+      },
+      "IWithdrawLocalPayout": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "estimatedRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "estimatedAmount": {
+            "$ref": "#/components/schemas/CurrencyCents"
+          },
+          "fxMarkupBps": {
+            "type": "number",
+            "format": "double"
+          },
+          "fxMarkupCents": {
+            "$ref": "#/components/schemas/CurrencyCents"
+          },
+          "rate": {
+            "type": "number",
+            "format": "double"
+          },
+          "receivedAmount": {
+            "$ref": "#/components/schemas/CurrencyCents"
+          },
+          "providerFee": {
+            "$ref": "#/components/schemas/CurrencyCents"
+          },
+          "lateFailure": {
+            "$ref": "#/components/schemas/IWithdrawLocalPayoutLateFailure"
+          }
+        },
+        "required": [
+          "country",
+          "currency",
+          "estimatedRate",
+          "estimatedAmount",
+          "fxMarkupBps",
+          "fxMarkupCents"
+        ],
+        "description": "Local-currency side of a local bank payout (CF-4988). The withdraw's own\namounts and fees stay in USD; the payee is paid exactly `estimatedAmount` in\ntheir currency and the provider debits the USD equivalent from us.",
+        "title": "IWithdrawLocalPayout"
+      },
       "PickIWithdrawExcludeKeyofIWithdrawProviderCryptoPayoutInfo": {
         "type": "object",
         "properties": {
@@ -36831,6 +37016,9 @@
           },
           "returnStatus": {
             "$ref": "#/components/schemas/WithdrawFailedReturnStatus"
+          },
+          "localPayout": {
+            "$ref": "#/components/schemas/IWithdrawLocalPayout"
           },
           "unclaimedAt": {
             "type": "string",
@@ -40022,6 +40210,39 @@
         ],
         "title": "CustomFeePresentment"
       },
+      "LocalPayoutEstimate": {
+        "type": "object",
+        "properties": {
+          "estimatedAmount": {
+            "$ref": "#/components/schemas/CurrencyCents"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "rate": {
+            "type": "number",
+            "format": "double"
+          },
+          "isEstimate": {
+            "type": "boolean"
+          },
+          "minimumAmount": {
+            "$ref": "#/components/schemas/CurrencyCents"
+          },
+          "belowMinimum": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "estimatedAmount",
+          "currency",
+          "rate",
+          "isEstimate",
+          "minimumAmount",
+          "belowMinimum"
+        ],
+        "title": "LocalPayoutEstimate"
+      },
       "WithdrawQuoteFeesAndLimit": {
         "type": "object",
         "properties": {
@@ -40048,6 +40269,9 @@
           },
           "accountIneligible": {
             "type": "boolean"
+          },
+          "localEstimate": {
+            "$ref": "#/components/schemas/LocalPayoutEstimate"
           }
         },
         "required": [
@@ -40115,6 +40339,9 @@
           "swift": {
             "$ref": "#/components/schemas/WithdrawQuoteFeesAndLimit"
           },
+          "npp": {
+            "$ref": "#/components/schemas/WithdrawQuoteFeesAndLimit"
+          },
           "crypto": {
             "$ref": "#/components/schemas/WithdrawQuoteFeesAndLimit"
           },
@@ -40150,6 +40377,7 @@
           "wire",
           "interac",
           "swift",
+          "npp",
           "crypto",
           "quote",
           "totalMerchantDebit",
@@ -46972,6 +47200,72 @@
         ],
         "title": "WithdrawalResponseOutstanding"
       },
+      "WithdrawalResponseLocalPayoutReceivedAmount": {
+        "type": "object",
+        "properties": {
+          "cents": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          }
+        },
+        "required": [
+          "cents",
+          "currency"
+        ],
+        "title": "WithdrawalResponseLocalPayoutReceivedAmount"
+      },
+      "WithdrawalResponseLocalPayoutEstimatedAmount": {
+        "type": "object",
+        "properties": {
+          "cents": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          }
+        },
+        "required": [
+          "cents",
+          "currency"
+        ],
+        "title": "WithdrawalResponseLocalPayoutEstimatedAmount"
+      },
+      "WithdrawalResponseLocalPayout": {
+        "type": "object",
+        "properties": {
+          "receivedAmount": {
+            "$ref": "#/components/schemas/WithdrawalResponseLocalPayoutReceivedAmount"
+          },
+          "rate": {
+            "type": "number",
+            "format": "double"
+          },
+          "estimatedAmount": {
+            "$ref": "#/components/schemas/WithdrawalResponseLocalPayoutEstimatedAmount"
+          },
+          "estimatedRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "estimatedAmount",
+          "estimatedRate",
+          "currency",
+          "country"
+        ],
+        "title": "WithdrawalResponseLocalPayout"
+      },
       "WithdrawalResponseCryptoPayoutInfo": {
         "type": "object",
         "properties": {
@@ -47105,6 +47399,9 @@
           },
           "returnStatus": {
             "$ref": "#/components/schemas/WithdrawFailedReturnStatus"
+          },
+          "localPayout": {
+            "$ref": "#/components/schemas/WithdrawalResponseLocalPayout"
           },
           "unclaimedAt": {
             "type": "string",
@@ -49154,6 +49451,12 @@
             "items": {
               "$ref": "#/components/schemas/EftPayoutProvider"
             }
+          },
+          "localRailPayoutProviders": {
+            "$ref": "#/components/schemas/Partial_Record_LocalRailSpeed.LocalBankPayoutProvider-Array__"
+          },
+          "payoutFxMarkupBps": {
+            "$ref": "#/components/schemas/Partial_Record_Currency.number__"
           },
           "eftPayoutProvider": {
             "$ref": "#/components/schemas/EftPayoutProvider"
@@ -51784,6 +52087,61 @@
         "description": "From T, pick a set of properties whose keys are in the union K",
         "title": "Pick_IEftAccount.Exclude_keyofIEftAccount.vendorData__"
       },
+      "PickILocalBankAccountExcludeKeyofILocalBankAccountAccountHashOrVendorDataKind": {
+        "type": "string",
+        "enum": [
+          "localBank"
+        ],
+        "title": "PickILocalBankAccountExcludeKeyofILocalBankAccountAccountHashOrVendorDataKind"
+      },
+      "Pick_ILocalBankAccount.Exclude_keyofILocalBankAccount.accountHash-or-vendorData__": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "$ref": "#/components/schemas/Country"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "token": {
+            "type": "string"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "mask": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PickILocalBankAccountExcludeKeyofILocalBankAccountAccountHashOrVendorDataKind"
+          },
+          "accountHolderName": {
+            "type": "string"
+          },
+          "bankName": {
+            "type": "string"
+          },
+          "fields": {
+            "$ref": "#/components/schemas/Record_string.string_"
+          }
+        },
+        "required": [
+          "country",
+          "token",
+          "currency",
+          "mask",
+          "kind",
+          "accountHolderName",
+          "bankName",
+          "fields"
+        ],
+        "description": "From T, pick a set of properties whose keys are in the union K",
+        "title": "Pick_ILocalBankAccount.Exclude_keyofILocalBankAccount.accountHash-or-vendorData__"
+      },
       "IWithdrawerMobileAccountType": {
         "type": "string",
         "enum": [
@@ -51930,6 +52288,12 @@
               "$ref": "#/components/schemas/Pick_IEftAccount.Exclude_keyofIEftAccount.vendorData__"
             }
           },
+          "localBankAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pick_ILocalBankAccount.Exclude_keyofILocalBankAccount.accountHash-or-vendorData__"
+            }
+          },
           "venmo": {
             "$ref": "#/components/schemas/Pick_IVenmo.Exclude_keyofIVenmo.vendorData__"
           },
@@ -51982,6 +52346,7 @@
           "swifts",
           "pixes",
           "efts",
+          "localBankAccounts",
           "mobiles",
           "p2cAvailable",
           "applePayAvailable",
@@ -52170,6 +52535,28 @@
           "number"
         ],
         "title": "IbanAccountData"
+      },
+      "AddLocalBankAccountArgs": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "description": "ISO 3166-1 alpha-2 country of the bank account, e.g. \"AU\""
+          },
+          "accountHolderName": {
+            "type": "string",
+            "description": "Name on the bank account. Must match the withdrawer's verified name.\nLatin letters only, 35 characters or fewer."
+          },
+          "fields": {
+            "$ref": "#/components/schemas/Record_string.string_"
+          }
+        },
+        "required": [
+          "country",
+          "accountHolderName",
+          "fields"
+        ],
+        "title": "AddLocalBankAccountArgs"
       },
       "SwiftAccountDataIntermediaryBank": {
         "type": "object",
@@ -52456,6 +52843,18 @@
         ],
         "title": "Withdraw_DeleteWithdrawerInterac_Response_200"
       },
+      "Withdraw_DeleteLocalBankAccount_Response_200": {
+        "type": "object",
+        "properties": {
+          "withdrawer": {
+            "$ref": "#/components/schemas/IWithdrawerWithAccounts"
+          }
+        },
+        "required": [
+          "withdrawer"
+        ],
+        "title": "Withdraw_DeleteLocalBankAccount_Response_200"
+      },
       "Withdraw_DeleteWithdrawerMobile_Response_200": {
         "type": "object",
         "properties": {
@@ -52662,6 +53061,9 @@
           "swift": {
             "$ref": "#/components/schemas/WithdrawQuoteFeesAndLimit"
           },
+          "npp": {
+            "$ref": "#/components/schemas/WithdrawQuoteFeesAndLimit"
+          },
           "crypto": {
             "$ref": "#/components/schemas/WithdrawQuoteFeesAndLimit"
           },
@@ -52688,6 +53090,7 @@
           "wire",
           "interac",
           "swift",
+          "npp",
           "crypto",
           "quote"
         ],
@@ -52755,6 +53158,9 @@
           "swift": {
             "$ref": "#/components/schemas/WithdrawExactOutQuote"
           },
+          "npp": {
+            "$ref": "#/components/schemas/WithdrawExactOutQuote"
+          },
           "crypto": {
             "$ref": "#/components/schemas/WithdrawExactOutQuote"
           }
@@ -52772,6 +53178,7 @@
           "wire",
           "interac",
           "swift",
+          "npp",
           "crypto"
         ],
         "description": "Construct a type with a set of properties K of type T",
